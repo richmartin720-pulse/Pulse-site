@@ -1,32 +1,264 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pulse Privacy Policy</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pulse Privacy Policy</title>
+  <meta name="description" content="Privacy Policy for the Pulse app." />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #111827;
+      --card-2: #1e293b;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --accent: #3b82f6;
+      --border: rgba(255,255,255,0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(59,130,246,0.18), transparent 30%),
+        linear-gradient(180deg, #0b1220 0%, var(--bg) 100%);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      font-size: 24px;
+      font-weight: 700;
+      color: white;
+      text-decoration: none;
+    }
+
+    .nav a {
+      color: var(--muted);
+      text-decoration: none;
+      margin-left: 18px;
+      font-size: 14px;
+    }
+
+    .nav a:hover {
+      color: white;
+    }
+
+    .hero {
+      background: rgba(17, 24, 39, 0.78);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(59,130,246,0.14);
+      color: #93c5fd;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 36px;
+      line-height: 1.15;
+      color: white;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .card {
+      background: rgba(17, 24, 39, 0.9);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    h2 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 22px;
+      color: white;
+    }
+
+    h3 {
+      margin-top: 26px;
+      margin-bottom: 8px;
+      font-size: 18px;
+      color: white;
+    }
+
+    p {
+      margin: 0 0 14px;
+      color: var(--text);
+    }
+
+    ul {
+      margin: 0 0 16px 20px;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .contact-box {
+      margin-top: 24px;
+      padding: 18px;
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    .contact-box a {
+      color: #93c5fd;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 640px) {
+      h1 {
+        font-size: 30px;
+      }
+
+      .hero,
+      .card {
+        padding: 22px 18px;
+      }
+
+      .nav a {
+        margin-left: 12px;
+      }
+    }
+  </style>
 </head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <a href="/" class="brand">Pulse</a>
+      <div class="nav">
+        <a href="/">Home</a>
+        <a href="/support">Support</a>
+      </div>
+    </div>
 
-<body style="font-family: Arial; max-width:700px; margin:auto; padding:40px;">
+    <div class="hero">
+      <div class="eyebrow">LEGAL</div>
+      <h1>Privacy Policy</h1>
+      <p class="subtitle">Last updated: 15 March 2026</p>
+    </div>
 
-<h1>Privacy Policy</h1>
+    <div class="card">
+      <p>
+        Pulse ("we", "our", or "us") operates the Pulse mobile application.
+        This Privacy Policy explains what information we may collect, how we use it,
+        and the choices available to users.
+      </p>
 
-<p>Last updated: 2026</p>
+      <h3>Information We Collect</h3>
+      <p>
+        We may collect information you provide when creating an account, posting content,
+        contacting support, or interacting with features in the app.
+      </p>
+      <ul>
+        <li>Account information such as username, display name, and profile details</li>
+        <li>User-generated content such as videos, comments, captions, or other submissions</li>
+        <li>Messages or information you send when requesting support</li>
+      </ul>
 
-<p>Pulse respects your privacy. This policy explains how we collect, use, and protect your information when using the Pulse mobile application.</p>
+      <h3>Usage Data</h3>
+      <p>
+        We may collect limited technical and usage information about how the app is accessed and used.
+        This may include device type, operating system, app version, and interaction data.
+      </p>
 
-<h2>Information We Collect</h2>
+      <h3>How We Use Information</h3>
+      <p>We may use collected information to:</p>
+      <ul>
+        <li>Operate, maintain, and improve the Pulse platform</li>
+        <li>Provide core app functionality</li>
+        <li>Moderate content and help maintain community safety</li>
+        <li>Respond to support requests and user enquiries</li>
+        <li>Monitor performance, reliability, and misuse of the service</li>
+      </ul>
 
-<p>We may collect information you provide when creating an account, posting content, or interacting with the platform.</p>
+      <h3>User Content</h3>
+      <p>
+        Content posted by users may be visible to other users of the platform,
+        depending on how the app is designed and the features being used.
+      </p>
 
-<h2>How We Use Information</h2>
+      <h3>Data Security</h3>
+      <p>
+        We take reasonable steps to protect information, but no method of transmission
+        over the internet or electronic storage is completely secure.
+      </p>
 
-<p>Information is used to operate the Pulse platform, improve the service, and maintain community safety.</p>
+      <h3>Children</h3>
+      <p>
+        Pulse is not intended for children under 13. If you believe a child has provided
+        personal information through the app, please contact us so we can review and address it.
+      </p>
 
-<h2>Contact</h2>
+      <h3>Changes to This Policy</h3>
+      <p>
+        We may update this Privacy Policy from time to time. Any updates will be posted on this page
+        with a revised “Last updated” date.
+      </p>
 
-<p>If you have any questions regarding this privacy policy please contact:</p>
+      <h3>Contact</h3>
+      <div class="contact-box">
+        <p class="muted">Questions about this policy?</p>
+        <p><a href="mailto:support@pulse-app.global">support@pulse-app.global</a></p>
+      </div>
+    </div>
 
-<p>support@pulse-app.global</p>
-
+    <div class="footer">
+      © 2026 Pulse
+    </div>
+  </div>
 </body>
 </html>
