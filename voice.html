@@ -190,79 +190,87 @@ font-size:14px;
 </div>
 
 <script>
-const SUPABASE_URL = "=https://nnnmksktrzwuyyvouyxb.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_73uYxSyI5hu617W5em9NWg_tne5dBlb";
+const SUPABASE_URL = "https://YOUR_PROJECT_REF.supabase.co";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
 
 function getVideoId() {
   const params = new URLSearchParams(window.location.search);
   return params.get("id");
 }
 
-async function loadVoice() {
+function showError(message) {
   const loadingEl = document.getElementById("loading");
   const errorEl = document.getElementById("error");
+  loadingEl.style.display = "none";
+  errorEl.style.display = "block";
+  errorEl.textContent = message;
+}
+
+async function loadVoice() {
+  const loadingEl = document.getElementById("loading");
   const contentEl = document.getElementById("content");
 
-  const questionTextEl = document.getElementById("questionText");
   const stanceTextEl = document.getElementById("stanceText");
   const usernameTextEl = document.getElementById("usernameText");
+  const questionTextEl = document.getElementById("questionText");
   const videoEl = document.getElementById("voiceVideo");
   const openAppButton = document.getElementById("openAppButton");
 
   const videoId = getVideoId();
 
   if (!videoId) {
-    loadingEl.style.display = "none";
-    errorEl.style.display = "block";
-    errorEl.textContent = "Missing video id.";
+    showError("Missing video id in URL.");
     return;
   }
 
   try {
-    const url =
-      `${SUPABASE_URL}/rest/v1/videos?id=eq.${videoId}` +
+    const requestUrl =
+      `${SUPABASE_URL}/rest/v1/videos` +
+      `?id=eq.${videoId}` +
       `&status=eq.approved` +
       `&select=id,storage_path,stance,username,question_id`;
 
-    const response = await fetch(url, {
+    const response = await fetch(requestUrl, {
+      method: "GET",
       headers: {
-        apikey: SUPABASE_ANON_KEY,
-        Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+        "Accept": "application/json"
       }
     });
 
-    if (!response.ok) {
-      throw new Error(`Request failed: ${response.status}`);
+    const rawText = await response.text();
+    let rows = [];
+
+    try {
+      rows = JSON.parse(rawText);
+    } catch {
+      throw new Error(`Non-JSON response: ${rawText}`);
     }
 
-    const rows = await response.json();
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${rawText}`);
+    }
 
-    if (!rows || rows.length === 0) {
-      throw new Error("Voice not found.");
+    if (!Array.isArray(rows) || rows.length === 0) {
+      throw new Error("No approved video found for this id. Possible causes: wrong id, video not approved, or RLS blocking anon read.");
     }
 
     const voice = rows[0];
-    const questionText =
-      voice.questions && voice.questions.question_text
-        ? voice.questions.question_text
-        : "Debate unavailable";
 
     const videoUrl = `${SUPABASE_URL}/storage/v1/object/public/videos/${voice.storage_path}`;
 
-    questionTextEl.textContent = questionText;
+    questionTextEl.textContent = "Debate";
     stanceTextEl.textContent = (voice.stance || "-").toUpperCase();
     usernameTextEl.textContent = voice.username || "Anonymous";
     videoEl.src = videoUrl;
-
     openAppButton.href = `pulse://voice/${voice.id}`;
 
     loadingEl.style.display = "none";
     contentEl.style.display = "block";
   } catch (error) {
-    console.error(error);
-    loadingEl.style.display = "none";
-    errorEl.style.display = "block";
-    errorEl.textContent = "Could not load this voice.";
+    console.error("loadVoice error:", error);
+    showError(error.message || "Could not load this voice.");
   }
 }
 
