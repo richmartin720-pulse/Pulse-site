@@ -12,46 +12,33 @@ font-family:Arial, sans-serif;
 background:linear-gradient(180deg,#0f172a,#020617);
 color:white;
 }
-
 .container{
 max-width:800px;
 margin:auto;
 padding:60px 20px;
 }
-
 .logo{
 width:80px;
 margin-bottom:20px;
 }
-
 h1{
 font-size:34px;
 margin-bottom:10px;
 }
-
-h2{
-margin-top:30px;
-}
-
-p,li{
+p{
 color:#cbd5e1;
 line-height:1.6;
 }
-
 a{
-color:#93c5fd;
 text-decoration:none;
 }
-
 .card{
 margin-top:30px;
 padding:20px;
 border:1px solid rgba(255,255,255,0.08);
 border-radius:16px;
 background:rgba(255,255,255,0.04);
-backdrop-filter:blur(6px);
 }
-
 .label{
 font-size:12px;
 letter-spacing:1px;
@@ -59,72 +46,39 @@ text-transform:uppercase;
 color:#94a3b8;
 margin-bottom:8px;
 }
-
 .value{
 font-size:18px;
 color:white;
 margin-bottom:18px;
+word-break:break-word;
 }
-
-.video-wrap{
-margin-top:20px;
-border-radius:16px;
-overflow:hidden;
-background:black;
-}
-
-video{
-width:100%;
-display:block;
-max-height:70vh;
-background:black;
-}
-
 .actions{
 display:flex;
 gap:12px;
 flex-wrap:wrap;
 margin-top:24px;
 }
-
 .button{
 display:inline-block;
 padding:14px 18px;
 border-radius:12px;
 font-weight:bold;
-text-decoration:none;
-cursor:pointer;
-border:none;
 font-size:16px;
 }
-
 .button-primary{
 background:white;
 color:#020617;
 }
-
 .button-secondary{
 background:transparent;
 color:#93c5fd;
 border:1px solid rgba(147,197,253,0.35);
 }
-
 .small{
 font-size:14px;
 color:#94a3b8;
 margin-top:20px;
 }
-
-.error{
-color:#fca5a5;
-margin-top:20px;
-}
-
-.loading{
-color:#cbd5e1;
-margin-top:20px;
-}
-
 footer{
 margin-top:60px;
 color:#64748b;
@@ -134,144 +88,52 @@ font-size:14px;
 </head>
 
 <body>
-
 <div class="container">
   <img src="logo.png" class="logo" alt="Pulse Logo">
 
   <h1>Pulse Voice</h1>
   <p>Hear the world</p>
 
-  <div id="loading" class="loading">Loading voice…</div>
-  <div id="error" class="error" style="display:none;"></div>
+  <div class="card">
+    <div class="label">Shared Voice ID</div>
+    <div id="voiceIdText" class="value">Loading...</div>
 
-  <div id="content" style="display:none;">
-    <div class="card">
-      <div class="label">Debate</div>
-      <div id="questionText" class="value">-</div>
+    <p>
+      This shared Pulse voice can be opened in the app.
+    </p>
 
-      <div class="label">Stance</div>
-      <div id="stanceText" class="value">-</div>
-
-      <div class="label">Shared by</div>
-      <div id="usernameText" class="value">-</div>
-
-      <div class="video-wrap">
-        <video id="voiceVideo" controls playsinline></video>
-      </div>
-
-      <div class="actions">
-        <a
-          id="openAppButton"
-          class="button button-primary"
-          href="#"
-        >
-          Open in Pulse
-        </a>
-
-        <a
-          class="button button-secondary"
-          href="https://apps.apple.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Download on the App Store
-        </a>
-      </div>
-
-      <p class="small">
-        If Pulse is installed, the Open in Pulse button may open the app. If not, download it from the App Store.
-      </p>
+    <div class="actions">
+      <a id="openAppButton" class="button button-primary" href="#">Open in Pulse</a>
+      <a class="button button-secondary" href="https://apps.apple.com/" target="_blank" rel="noopener noreferrer">Download on the App Store</a>
     </div>
+
+    <p class="small">
+      If Pulse is installed, tap “Open in Pulse”. If not, download it from the App Store.
+    </p>
   </div>
 
   <footer>
-    <a href="index.html">Back to home</a>
+    <a href="index.html" style="color:#93c5fd;">Back to home</a>
   </footer>
 </div>
 
 <script>
-const SUPABASE_URL = "https://YOUR_PROJECT_REF.supabase.co";
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
-
 function getVideoId() {
   const params = new URLSearchParams(window.location.search);
   return params.get("id");
 }
 
-function showError(message) {
-  const loadingEl = document.getElementById("loading");
-  const errorEl = document.getElementById("error");
-  loadingEl.style.display = "none";
-  errorEl.style.display = "block";
-  errorEl.textContent = message;
+const videoId = getVideoId();
+const voiceIdText = document.getElementById("voiceIdText");
+const openAppButton = document.getElementById("openAppButton");
+
+if (videoId) {
+  voiceIdText.textContent = videoId;
+  openAppButton.href = `pulse://voice/${videoId}`;
+} else {
+  voiceIdText.textContent = "Missing voice id";
+  openAppButton.href = "pulse://";
 }
-
-async function loadVoice() {
-  const loadingEl = document.getElementById("loading");
-  const contentEl = document.getElementById("content");
-
-  const stanceTextEl = document.getElementById("stanceText");
-  const usernameTextEl = document.getElementById("usernameText");
-  const questionTextEl = document.getElementById("questionText");
-  const videoEl = document.getElementById("voiceVideo");
-  const openAppButton = document.getElementById("openAppButton");
-
-  const videoId = getVideoId();
-
-  if (!videoId) {
-    showError("Missing video id in URL");
-    return;
-  }
-
-  try {
-    const requestUrl =
-      `${SUPABASE_URL}/rest/v1/videos?id=eq.${videoId}&status=eq.approved&select=id,storage_path,stance,username,question_id`;
-
-    const response = await fetch(requestUrl, {
-      headers: {
-        apikey: SUPABASE_ANON_KEY,
-        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-        Accept: "application/json"
-      }
-    });
-
-    const rawText = await response.text();
-
-    if (!response.ok) {
-      showError(`HTTP ${response.status}: ${rawText}`);
-      return;
-    }
-
-    let rows;
-    try {
-      rows = JSON.parse(rawText);
-    } catch {
-      showError(`Bad JSON response: ${rawText}`);
-      return;
-    }
-
-    if (!Array.isArray(rows) || rows.length === 0) {
-      showError("No approved video found. Check: correct id, approved status, and anon SELECT policy on videos.");
-      return;
-    }
-
-    const voice = rows[0];
-    const videoUrl = `${SUPABASE_URL}/storage/v1/object/public/videos/${voice.storage_path}`;
-
-    questionTextEl.textContent = "Debate";
-    stanceTextEl.textContent = (voice.stance || "-").toUpperCase();
-    usernameTextEl.textContent = voice.username || "Anonymous";
-    videoEl.src = videoUrl;
-    openAppButton.href = `pulse://voice/${voice.id}`;
-
-    loadingEl.style.display = "none";
-    contentEl.style.display = "block";
-  } catch (error) {
-    showError(`Fetch error: ${error.message}`);
-  }
-}
-
-loadVoice();
 </script>
 
 </body>
