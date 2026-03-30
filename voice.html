@@ -91,15 +91,11 @@ font-size:14px;
 <div class="container">
   <img src="logo.png" class="logo" alt="Pulse Logo">
 
-  <h1>Pulse Voice</h1>
+  <h1>Shared "Voice"</h1>
   <p>Hear the world</p>
 
-  <div class="card">
-    <div class="label">Shared Voice ID</div>
-    <div id="voiceIdText" class="value">Loading...</div>
-
     <p>
-      This shared Pulse voice can be opened in the app.
+      This "voice" was shared from the Pulse app.
     </p>
 
     <div class="actions">
@@ -115,7 +111,7 @@ font-size:14px;
     </div>
 
     <p class="small">
-      This voice was shared from Pulse. Download the app to watch debates and join the conversation.
+      Download the app to watch debates and join the conversation.
     </p>
   </div>
 
@@ -123,25 +119,6 @@ font-size:14px;
     <a href="index.html" style="color:#93c5fd;">Back to home</a>
   </footer>
 </div>
-
-<script>
-function getVideoId() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get("id");
-}
-
-const videoId = getVideoId();
-const voiceIdText = document.getElementById("voiceIdText");
-const openAppButton = document.getElementById("openAppButton");
-
-if (videoId) {
-  voiceIdText.textContent = videoId;
-  openAppButton.href = `pulse://voice/${videoId}`;
-} else {
-  voiceIdText.textContent = "Missing voice id";
-  openAppButton.href = "pulse://";
-}
-</script>
 
 </body>
 </html>
