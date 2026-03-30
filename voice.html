@@ -219,45 +219,43 @@ async function loadVoice() {
   const videoId = getVideoId();
 
   if (!videoId) {
-    showError("Missing video id in URL.");
+    showError("Missing video id in URL");
     return;
   }
 
   try {
     const requestUrl =
-      `${SUPABASE_URL}/rest/v1/videos` +
-      `?id=eq.${videoId}` +
-      `&status=eq.approved` +
-      `&select=id,storage_path,stance,username,question_id`;
+      `${SUPABASE_URL}/rest/v1/videos?id=eq.${videoId}&status=eq.approved&select=id,storage_path,stance,username,question_id`;
 
     const response = await fetch(requestUrl, {
-      method: "GET",
       headers: {
-        "apikey": SUPABASE_ANON_KEY,
-        "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
-        "Accept": "application/json"
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        Accept: "application/json"
       }
     });
 
     const rawText = await response.text();
-    let rows = [];
 
+    if (!response.ok) {
+      showError(`HTTP ${response.status}: ${rawText}`);
+      return;
+    }
+
+    let rows;
     try {
       rows = JSON.parse(rawText);
     } catch {
-      throw new Error(`Non-JSON response: ${rawText}`);
-    }
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${rawText}`);
+      showError(`Bad JSON response: ${rawText}`);
+      return;
     }
 
     if (!Array.isArray(rows) || rows.length === 0) {
-      throw new Error("No approved video found for this id. Possible causes: wrong id, video not approved, or RLS blocking anon read.");
+      showError("No approved video found. Check: correct id, approved status, and anon SELECT policy on videos.");
+      return;
     }
 
     const voice = rows[0];
-
     const videoUrl = `${SUPABASE_URL}/storage/v1/object/public/videos/${voice.storage_path}`;
 
     questionTextEl.textContent = "Debate";
@@ -269,8 +267,7 @@ async function loadVoice() {
     loadingEl.style.display = "none";
     contentEl.style.display = "block";
   } catch (error) {
-    console.error("loadVoice error:", error);
-    showError(error.message || "Could not load this voice.");
+    showError(`Fetch error: ${error.message}`);
   }
 }
 
