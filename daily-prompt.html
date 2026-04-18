@@ -16,9 +16,7 @@
       --btn-hover: #4338ca;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -33,8 +31,7 @@
       margin: 0 auto;
     }
 
-    .hero,
-    .box {
+    .hero, .box {
       background: var(--card);
       border: 1px solid var(--line);
       border-radius: 16px;
@@ -95,7 +92,7 @@
 
     textarea {
       width: 100%;
-      min-height: 140px;
+      min-height: 160px;
       background: #0a1222;
       color: white;
       border: 1px solid var(--line);
@@ -190,10 +187,45 @@
           </div>
 
           <div class="box">
-            <h2>Gemini Prompt</h2>
-            <div class="small">Copy this straight into Gemini</div>
-            <textarea id="g">${escapeHtml(data.geminiPrompt)}</textarea>
-            <button onclick="copyText('g', this)">Copy Gemini Prompt</button>
+            <h2>Image Prompt 1</h2>
+            <div class="small">Weekly question image</div>
+            <textarea id="img1">${escapeHtml(data.imagePrompt1)}</textarea>
+            <button onclick="copyText('img1', this)">Copy Image Prompt 1</button>
+          </div>
+
+          <div class="box">
+            <h2>Image Prompt 2</h2>
+            <div class="small">Comments / reactions image</div>
+            <textarea id="img2">${escapeHtml(data.imagePrompt2)}</textarea>
+            <button onclick="copyText('img2', this)">Copy Image Prompt 2</button>
+          </div>
+
+          <div class="box">
+            <h2>Image Prompt 3</h2>
+            <div class="small">Poll results image</div>
+            <textarea id="img3">${escapeHtml(data.imagePrompt3)}</textarea>
+            <button onclick="copyText('img3', this)">Copy Image Prompt 3</button>
+          </div>
+
+          <div class="box">
+            <h2>Image Prompt 4</h2>
+            <div class="small">Around the world image</div>
+            <textarea id="img4">${escapeHtml(data.imagePrompt4)}</textarea>
+            <button onclick="copyText('img4', this)">Copy Image Prompt 4</button>
+          </div>
+
+          <div class="box">
+            <h2>Image Prompt 5</h2>
+            <div class="small">CTA image</div>
+            <textarea id="img5">${escapeHtml(data.imagePrompt5)}</textarea>
+            <button onclick="copyText('img5', this)">Copy Image Prompt 5</button>
+          </div>
+
+          <div class="box">
+            <h2>Image Prompt 6</h2>
+            <div class="small">Brand image</div>
+            <textarea id="img6">${escapeHtml(data.imagePrompt6)}</textarea>
+            <button onclick="copyText('img6', this)">Copy Image Prompt 6</button>
           </div>
 
           <div class="grid two">
