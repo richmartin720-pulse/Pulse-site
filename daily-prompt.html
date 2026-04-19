@@ -13,4 +13,320 @@
       --muted: #9fb0cf;
       --line: #24314f;
       --btn: #4f46e5;
-      --btn-hover: #4338
+      --btn-hover: #4338ca;
+      --danger: #ff9b9b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg, #07101f 0%, #09162b 100%);
+      color: var(--text);
+      padding: 20px;
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .hero,
+    .box {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.22);
+    }
+
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: 28px;
+    }
+
+    .question {
+      font-size: 22px;
+      line-height: 1.4;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .stats {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      background: var(--card-2);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 14px;
+      min-width: 120px;
+      font-weight: 700;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 900px) {
+      .grid.two {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      font-size: 20px;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 170px;
+      background: #0a1222;
+      color: white;
+      border: 1px solid var(--line);
+      padding: 12px;
+      border-radius: 10px;
+      box-sizing: border-box;
+      resize: vertical;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    textarea.short {
+      min-height: 84px;
+    }
+
+    button {
+      margin-top: 10px;
+      margin-right: 8px;
+      padding: 10px 14px;
+      background: var(--btn);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    button:hover {
+      background: var(--btn-hover);
+    }
+
+    .error {
+      color: var(--danger);
+      white-space: pre-wrap;
+      font-weight: 700;
+    }
+
+    .section-gap {
+      margin-top: 12px;
+    }
+
+    .persona-meta {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .topbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .pill {
+      background: var(--card-2);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div id="app" class="box">Loading...</div>
+  </div>
+
+  <script>
+    const API_URL = "https://nnnmksktrzwuyyvouyxb.supabase.co/functions/v1/daily-prompt?key=pulse-8472-secure";
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    async function copyText(id, btn) {
+      const el = document.getElementById(id);
+      await navigator.clipboard.writeText(el.value);
+      const old = btn.textContent;
+      btn.textContent = "Copied";
+      setTimeout(() => {
+        btn.textContent = old;
+      }, 1200);
+    }
+
+    async function load() {
+      const app = document.getElementById("app");
+
+      try {
+        const res = await fetch(API_URL, { cache: "no-store" });
+        const data = await res.json();
+
+        if (!res.ok || data.error) {
+          app.innerHTML = `<div class="error">${escapeHtml(data.error || "Unknown error")}</div>`;
+          return;
+        }
+
+        let personasHtml = "";
+        (data.personaPrompts || []).forEach((persona, i) => {
+          personasHtml += `
+            <div class="box">
+              <h2>Persona Prompt ${i + 1} — ${escapeHtml(persona.name)}</h2>
+              <div class="persona-meta">${escapeHtml(persona.country)}</div>
+              <textarea id="persona${i}">${escapeHtml(persona.prompt)}</textarea>
+              <button onclick="copyText('persona${i}', this)">Copy Persona Prompt ${i + 1}</button>
+            </div>
+          `;
+        });
+
+        app.outerHTML = `
+          <div class="hero">
+            <h1>Pulse Daily Content</h1>
+            <div class="question">${escapeHtml(data.question)}</div>
+
+            <div class="topbar">
+              <div class="pill">YES ${data.yesPercent}%</div>
+              <div class="pill">NO ${data.noPercent}%</div>
+              <div class="pill">${data.displayVotes}+ votes</div>
+            </div>
+
+            <div class="stats">
+              <div class="stat">Comment 1: ${escapeHtml(data.comments?.[0] || "")}</div>
+              <div class="stat">Comment 2: ${escapeHtml(data.comments?.[1] || "")}</div>
+              <div class="stat">Comment 3: ${escapeHtml(data.comments?.[2] || "")}</div>
+            </div>
+          </div>
+
+          <div class="box">
+            <h2>Promo Prompt</h2>
+            <div class="small">Weekly promo / launch video prompt for Grok</div>
+            <textarea id="promo">${escapeHtml(data.promoPrompt)}</textarea>
+            <button onclick="copyText('promo', this)">Copy Promo Prompt</button>
+          </div>
+
+          ${personasHtml}
+
+          <div class="box">
+            <h2>Image Prompt 1</h2>
+            <div class="small">Weekly question image</div>
+            <textarea id="img1">${escapeHtml(data.imagePrompt1)}</textarea>
+            <button onclick="copyText('img1', this)">Copy Image Prompt 1</button>
+          </div>
+
+          <div class="box">
+            <h2>Image Prompt 2</h2>
+            <div class="small">Comments / reactions image</div>
+            <textarea id="img2">${escapeHtml(data.imagePrompt2)}</textarea>
+            <button onclick="copyText('img2', this)">Copy Image Prompt 2</button>
+          </div>
+
+          <div class="box">
+            <h2>Image Prompt 3</h2>
+            <div class="small">Poll results image</div>
+            <textarea id="img3">${escapeHtml(data.imagePrompt3)}</textarea>
+            <button onclick="copyText('img3', this)">Copy Image Prompt 3</button>
+          </div>
+
+          <div class="box">
+            <h2>Image Prompt 4</h2>
+            <div class="small">Around the world image</div>
+            <textarea id="img4">${escapeHtml(data.imagePrompt4)}</textarea>
+            <button onclick="copyText('img4', this)">Copy Image Prompt 4</button>
+          </div>
+
+          <div class="box">
+            <h2>Image Prompt 5</h2>
+            <div class="small">CTA image</div>
+            <textarea id="img5">${escapeHtml(data.imagePrompt5)}</textarea>
+            <button onclick="copyText('img5', this)">Copy Image Prompt 5</button>
+          </div>
+
+          <div class="box">
+            <h2>Image Prompt 6</h2>
+            <div class="small">Brand image</div>
+            <textarea id="img6">${escapeHtml(data.imagePrompt6)}</textarea>
+            <button onclick="copyText('img6', this)">Copy Image Prompt 6</button>
+          </div>
+
+          <div class="grid two">
+            <div class="box">
+              <h2>TikTok</h2>
+              <div class="small">Caption</div>
+              <textarea id="t1" class="short">${escapeHtml(data.tiktokCaption)}</textarea>
+              <button onclick="copyText('t1', this)">Copy TikTok Caption</button>
+
+              <div class="small section-gap">Hashtags</div>
+              <textarea id="t2" class="short">${escapeHtml(data.tiktokTags)}</textarea>
+              <button onclick="copyText('t2', this)">Copy TikTok Hashtags</button>
+            </div>
+
+            <div class="box">
+              <h2>Instagram Reels</h2>
+              <div class="small">Caption</div>
+              <textarea id="i1" class="short">${escapeHtml(data.instaCaption)}</textarea>
+              <button onclick="copyText('i1', this)">Copy Instagram Caption</button>
+
+              <div class="small section-gap">Hashtags</div>
+              <textarea id="i2" class="short">${escapeHtml(data.instaTags)}</textarea>
+              <button onclick="copyText('i2', this)">Copy Instagram Hashtags</button>
+            </div>
+          </div>
+
+          <div class="box">
+            <h2>YouTube Shorts</h2>
+            <div class="small">Title</div>
+            <textarea id="y1" class="short">${escapeHtml(data.ytTitle)}</textarea>
+            <button onclick="copyText('y1', this)">Copy YouTube Title</button>
+
+            <div class="small section-gap">Caption</div>
+            <textarea id="y2" class="short">${escapeHtml(data.ytCaption)}</textarea>
+            <button onclick="copyText('y2', this)">Copy YouTube Caption</button>
+
+            <div class="small section-gap">Hashtags</div>
+            <textarea id="y3" class="short">${escapeHtml(data.ytTags)}</textarea>
+            <button onclick="copyText('y3', this)">Copy YouTube Hashtags</button>
+          </div>
+        `;
+      } catch (err) {
+        app.innerHTML = `<div class="error">${escapeHtml(String(err))}</div>`;
+      }
+    }
+
+    load();
+  </script>
+</body>
+</html>
