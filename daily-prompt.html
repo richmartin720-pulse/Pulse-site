@@ -69,18 +69,6 @@
       font-weight: 700;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 14px;
-    }
-
-    @media (min-width: 900px) {
-      .grid.two {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-
     h2 {
       margin: 0 0 8px;
       font-size: 19px;
@@ -220,25 +208,46 @@
       return ["#Pulse", "#fyp", "#viral", "#Debate", "#Question"];
     }
 
-    function buildPromoPrompt(basePrompt, question) {
-      const visualVariants = [
-        "Use a dark gradient background with subtle blue glow and soft motion.",
-        "Use a dark premium mobile UI background with faint purple glow and light movement.",
-        "Use a dark abstract background with subtle depth, clean contrast, and gentle motion."
-      ];
+    function buildPromoPrompt() {
+      return `Create a 9:16 vertical TikTok advert for an app called Pulse.
 
-      const idx = new Date().getDay() % visualVariants.length;
+The advert must feel premium, modern, dark, minimal, and highly social.
 
-      return `${basePrompt}
+Use the uploaded Pulse app screenshot as the main visual anchor throughout the video.
 
-EXTRA DIRECTION:
-- Keep all text inside safe central margins so nothing touches the left or right edges.
-- Make the main question large but not full width.
-- Use short line breaks so text stays neat and centered on a phone screen.
-- ${visualVariants[idx]}
-- Keep the text readable at all times.
-- Avoid plain flat black only backgrounds.
-- Keep the Pulse branding clean and premium.`;
+GOAL:
+Create curiosity and make viewers want to see the app.
+
+Do NOT overload the screen with text.
+
+Only use these short text moments:
+"YES or NO?"
+"1 question"
+"1 week"
+"Pick a side"
+"Pulse"
+"Hear the World"
+
+STRUCTURE:
+- Start with the app screenshot appearing cleanly in the center
+- Add slight zoom and fast polished transitions
+- Briefly show YES / NO energy around the app
+- Show a couple of tiny reaction bubbles
+- End on Pulse branding
+
+RULES:
+- Vertical only
+- Keep text centered
+- Keep wide margins
+- No long text
+- No clutter
+- No unreadable side text
+- No cinematic trailer look
+- No people speaking
+- No fake subtitles
+
+Length:
+6 seconds`;
     }
 
     function buildAdImagePrompt(question) {
@@ -301,7 +310,7 @@ ${tags}`;
           return;
         }
 
-        const promoPrompt = buildPromoPrompt(data.promoPrompt || "", data.question || "");
+        const promoPrompt = buildPromoPrompt();
         const adImagePrompt = buildAdImagePrompt(data.question || "");
         const socialCopy = buildSocialCopy(data.question || "");
 
@@ -339,7 +348,7 @@ ${tags}`;
 
           <div class="box">
             <h2>Promo Prompt</h2>
-            <div class="small">Weekly promo video prompt for Grok. This version adds a little visual variety and keeps text more centered and phone-friendly.</div>
+            <div class="small">New cleaner Grok promo prompt with less text and more curiosity.</div>
             <textarea id="promo">${escapeHtml(promoPrompt)}</textarea>
             <button onclick="copyText('promo', this)">Copy Promo Prompt</button>
           </div>
