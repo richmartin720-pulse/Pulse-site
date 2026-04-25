@@ -1,380 +1,208 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Pulse Daily Content</title>
-  <style>
-    :root {
-      --bg: #081226;
-      --card: #111b31;
-      --card-2: #0d1628;
-      --text: #f4f7fb;
-      --muted: #9fb0cf;
-      --line: #24314f;
-      --btn: #4f46e5;
-      --btn-hover: #4338ca;
-      --danger: #ff9b9b;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pulse Daily Content</title>
 
-    * { box-sizing: border-box; }
+<style>
+body {
+  margin:0;
+  font-family: Arial, sans-serif;
+  background:#081226;
+  color:white;
+  padding:14px;
+}
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(180deg, #07101f 0%, #09162b 100%);
-      color: var(--text);
-      padding: 16px;
-    }
+.wrap {
+  max-width:900px;
+  margin:auto;
+}
 
-    .wrap {
-      max-width: 980px;
-      margin: 0 auto;
-    }
+/* ===== HERO ===== */
+.hero {
+  background:#111b31;
+  padding:14px;
+  border-radius:14px;
+  margin-bottom:12px;
+}
 
-    .hero,
-    .box {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 14px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.22);
-    }
+.question {
+  font-size:18px;
+  font-weight:700;
+  margin-bottom:10px;
+}
 
-    .hero h1 {
-      margin: 0 0 10px;
-      font-size: 26px;
-    }
+.stats {
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
 
-    .question {
-      font-size: 21px;
-      line-height: 1.4;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
+.stat {
+  background:#0d1628;
+  padding:8px 10px;
+  border-radius:10px;
+  font-size:13px;
+}
 
-    .stats {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+/* ===== BOX ===== */
+.box {
+  background:#111b31;
+  padding:14px;
+  border-radius:14px;
+  margin-bottom:12px;
+}
 
-    .stat {
-      background: var(--card-2);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 10px 12px;
-      min-width: 120px;
-      font-weight: 700;
-    }
+h2 {
+  margin:0 0 6px;
+  font-size:17px;
+}
 
-    h2 {
-      margin: 0 0 8px;
-      font-size: 19px;
-    }
+.small {
+  font-size:12px;
+  color:#9fb0cf;
+  margin-bottom:6px;
+}
 
-    .small {
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 8px;
-      line-height: 1.35;
-    }
+textarea {
+  width:100%;
+  min-height:120px;
+  background:#0a1222;
+  color:white;
+  border:1px solid #24314f;
+  padding:10px;
+  border-radius:8px;
+  font-size:13px;
+  line-height:1.4;
+}
 
-    textarea {
-      width: 100%;
-      min-height: 180px;
-      background: #0a1222;
-      color: white;
-      border: 1px solid var(--line);
-      padding: 12px;
-      border-radius: 10px;
-      box-sizing: border-box;
-      resize: vertical;
-      font-family: Arial, sans-serif;
-      font-size: 14px;
-      line-height: 1.5;
-      white-space: pre-wrap;
-      word-break: break-word;
-      overflow-wrap: anywhere;
-    }
+textarea.short {
+  min-height:90px;
+}
 
-    textarea.short {
-      min-height: 110px;
-    }
+button {
+  margin-top:8px;
+  padding:8px 12px;
+  background:#4f46e5;
+  border:none;
+  border-radius:8px;
+  color:white;
+  cursor:pointer;
+}
 
-    button {
-      margin-top: 10px;
-      padding: 10px 14px;
-      background: var(--btn);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: 700;
-    }
+/* ===== PERSONA STYLE ===== */
+.persona {
+  background:#0f172a;
+  border:1px solid #1f2a44;
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:10px;
+}
 
-    button:hover {
-      background: var(--btn-hover);
-    }
+.persona textarea {
+  min-height:100px;
+}
 
-    .error {
-      color: var(--danger);
-      white-space: pre-wrap;
-      font-weight: 700;
-    }
+.flag {
+  margin-left:6px;
+}
 
-    .persona-meta {
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 10px;
-    }
-
-    .topbar {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 14px;
-    }
-
-    .pill {
-      background: var(--card-2);
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 8px 12px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-  </style>
+</style>
 </head>
+
 <body>
-  <div class="wrap">
-    <div id="app" class="box">Loading...</div>
-  </div>
+<div class="wrap">
+<div id="app">Loading...</div>
+</div>
 
-  <script>
-    const API_URL = "https://nnnmksktrzwuyyvouyxb.supabase.co/functions/v1/daily-prompt?key=pulse-8472-secure";
+<script>
+const API_URL = "https://nnnmksktrzwuyyvouyxb.supabase.co/functions/v1/daily-prompt?key=pulse-8472-secure";
 
-    const personaLabels = [
-      "BuzzBeat",
-      "Farillo",
-      "Fozzy W",
-      "Kahate",
-      "Rich Martin Colombia",
-      "Rich-Martin Norway",
-      "rich.martin.720",
-      "FagoVis686",
-      "TIKOJOY533",
-      "VAXAB44473",
-      "JAYAFO7829",
-      "MIHOM89785"
-    ];
+const flags = [
+"🇺🇸","🇦🇺","🇮🇹","🇯🇵","🇨🇴","🇳🇴","🇬🇧","🇮🇳","🇧🇷","🇦🇪","🇩🇪","🇿🇦"
+];
 
-    function escapeHtml(str) {
-      return String(str)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#39;");
-    }
+function copyText(id, btn){
+  const el = document.getElementById(id);
+  navigator.clipboard.writeText(el.value);
+  btn.innerText="Copied";
+  setTimeout(()=>btn.innerText="Copy",1000);
+}
 
-    async function copyText(id, btn) {
-      const el = document.getElementById(id);
-      await navigator.clipboard.writeText(el.value);
-      const old = btn.textContent;
-      btn.textContent = "Copied";
-      setTimeout(() => {
-        btn.textContent = old;
-      }, 1200);
-    }
+function promo2(){
+return `Make an advert for this app called Pulse that will go on TikTok.
 
-    function topicHashtags(question) {
-      const q = String(question || "").toLowerCase();
+The aim is to get people to go to the app and download it and sign up and vote.
 
-      if (q.includes("ai") || q.includes("chatbot") || q.includes("technology")) {
-        return ["#Pulse", "#fyp", "#viral", "#AI", "#TechTok"];
-      }
-      if (q.includes("money") || q.includes("million") || q.includes("rich") || q.includes("wealth")) {
-        return ["#Pulse", "#fyp", "#viral", "#Money", "#Debate"];
-      }
-      if (q.includes("love") || q.includes("dating") || q.includes("relationship")) {
-        return ["#Pulse", "#fyp", "#viral", "#Love", "#Debate"];
-      }
-      if (q.includes("social media") || q.includes("influencer") || q.includes("instagram") || q.includes("tiktok")) {
-        return ["#Pulse", "#fyp", "#viral", "#SocialMedia", "#Debate"];
-      }
+Use any knowledge that you have psychological balance and marketing skills to make the best TikTok video possible for this app using the screenshots as a references`;
+}
 
-      return ["#Pulse", "#fyp", "#viral", "#Debate", "#Question"];
-    }
+function socialCopy(q){
+return `${q} 👇
 
-    function buildPromoPrompt() {
-      return `Create a 9:16 vertical TikTok advert for an app called Pulse.
+#Pulse #fyp #viral #debate #question`;
+}
 
-The advert must feel premium, modern, dark, minimal, and highly social.
+async function load(){
 
-Use the uploaded Pulse app screenshot as the main visual anchor throughout the video.
+const res = await fetch(API_URL);
+const data = await res.json();
 
-GOAL:
-Create curiosity and make viewers want to see the app.
+let personaHTML = "";
 
-Do NOT overload the screen with text.
+(data.personaPrompts || []).forEach((p,i)=>{
+personaHTML += `
+<div class="persona">
+<h2>Persona ${i+1} ${flags[i] || ""}</h2>
+<textarea id="p${i}">${p.prompt}</textarea>
+<button onclick="copyText('p${i}',this)">Copy</button>
+</div>
+`;
+});
 
-Only use these short text moments:
-"YES or NO?"
-"1 question"
-"1 week"
-"Pick a side"
-"Pulse"
-"Hear the World"
+document.getElementById("app").innerHTML = `
 
-STRUCTURE:
-- Start with the app screenshot appearing cleanly in the center
-- Add slight zoom and fast polished transitions
-- Briefly show YES / NO energy around the app
-- Show a couple of tiny reaction bubbles
-- End on Pulse branding
+<div class="hero">
+<div class="question">${data.question}</div>
 
-RULES:
-- Vertical only
-- Keep text centered
-- Keep wide margins
-- No long text
-- No clutter
-- No unreadable side text
-- No cinematic trailer look
-- No people speaking
-- No fake subtitles
+<div class="stats">
+<div class="stat">YES ${data.yesPercent}%</div>
+<div class="stat">NO ${data.noPercent}%</div>
+<div class="stat">${data.displayVotes}+ votes</div>
+</div>
+</div>
 
-Length:
-6 seconds`;
-    }
+<div class="box">
+<h2>Promo Prompt 1</h2>
+<textarea id="promo1">${data.promoPrompt}</textarea>
+<button onclick="copyText('promo1',this)">Copy</button>
+</div>
 
-    function buildAdImagePrompt(question) {
-      const posterVariants = [
-        "Use a dark gradient background with subtle blue glow.",
-        "Use a dark premium UI poster style with soft purple glow.",
-        "Use a dark modern social poster style with faint abstract texture."
-      ];
+<div class="box">
+<h2>Promo Prompt 2</h2>
+<textarea id="promo2">${promo2()}</textarea>
+<button onclick="copyText('promo2',this)">Copy</button>
+</div>
 
-      const idx = new Date().getDay() % posterVariants.length;
+<div class="box">
+<h2>Ad Image Prompt</h2>
+<textarea id="img">${data.imagePrompt1 || ""}</textarea>
+<button onclick="copyText('img',this)">Copy</button>
+</div>
 
-      return `Create a 9:16 vertical poster-style image for a modern social media app called Pulse.
+<div class="box">
+<h2>Social Copy</h2>
+<textarea id="social" class="short">${socialCopy(data.question)}</textarea>
+<button onclick="copyText('social',this)">Copy</button>
+</div>
 
-Style:
-- Dark background
-- Minimal
-- Clean UI
-- High contrast
-- Modern mobile design
-- Premium tech feel
-- Very readable text
-- Built for a small phone screen
-- No clutter
+${personaHTML}
 
-${posterVariants[idx]}
+`;
+}
 
-Main text:
-"${question}"
-
-Secondary text:
-"1 question. 1 week."
-"Hear the World"
-
-Design:
-- Keep the question centered and inside safe margins
-- Make the text bold and easy to read on a phone
-- Add subtle app-style framing or a clean card
-- Include understated Pulse branding
-- Make it feel like a premium ad poster for social media
-
-No extra elements.`;
-    }
-
-    function buildSocialCopy(question) {
-      const tags = topicHashtags(question).slice(0, 5).join(" ");
-      return `${question} 👇
-
-${tags}`;
-    }
-
-    async function load() {
-      const app = document.getElementById("app");
-
-      try {
-        const res = await fetch(API_URL, { cache: "no-store" });
-        const data = await res.json();
-
-        if (!res.ok || data.error) {
-          app.innerHTML = `<div class="error">${escapeHtml(data.error || "Unknown error")}</div>`;
-          return;
-        }
-
-        const promoPrompt = buildPromoPrompt();
-        const adImagePrompt = buildAdImagePrompt(data.question || "");
-        const socialCopy = buildSocialCopy(data.question || "");
-
-        let personasHtml = "";
-        (data.personaPrompts || []).forEach((persona, i) => {
-          const label = personaLabels[i] || persona.name || `Persona ${i + 1}`;
-          const country = persona.country || "";
-          personasHtml += `
-            <div class="box">
-              <h2>Persona Prompt ${i + 1} — ${escapeHtml(label)}</h2>
-              <div class="persona-meta">${escapeHtml(country)}</div>
-              <textarea id="persona${i}">${escapeHtml(persona.prompt)}</textarea>
-              <button onclick="copyText('persona${i}', this)">Copy Persona Prompt ${i + 1}</button>
-            </div>
-          `;
-        });
-
-        app.outerHTML = `
-          <div class="hero">
-            <h1>Pulse Daily Content</h1>
-            <div class="question">${escapeHtml(data.question)}</div>
-
-            <div class="topbar">
-              <div class="pill">YES ${data.yesPercent}%</div>
-              <div class="pill">NO ${data.noPercent}%</div>
-              <div class="pill">${data.displayVotes}+ votes</div>
-            </div>
-
-            <div class="stats">
-              <div class="stat">Comment 1: ${escapeHtml(data.comments?.[0] || "")}</div>
-              <div class="stat">Comment 2: ${escapeHtml(data.comments?.[1] || "")}</div>
-              <div class="stat">Comment 3: ${escapeHtml(data.comments?.[2] || "")}</div>
-            </div>
-          </div>
-
-          <div class="box">
-            <h2>Promo Prompt</h2>
-            <div class="small">New cleaner Grok promo prompt with less text and more curiosity.</div>
-            <textarea id="promo">${escapeHtml(promoPrompt)}</textarea>
-            <button onclick="copyText('promo', this)">Copy Promo Prompt</button>
-          </div>
-
-          ${personasHtml}
-
-          <div class="box">
-            <h2>Ad Image Prompt</h2>
-            <div class="small">Single poster-style image prompt for Pulse.</div>
-            <textarea id="imgAd">${escapeHtml(adImagePrompt)}</textarea>
-            <button onclick="copyText('imgAd', this)">Copy Ad Image Prompt</button>
-          </div>
-
-          <div class="box">
-            <h2>Social Copy</h2>
-            <div class="small">Use this for TikTok, Instagram, and YouTube Shorts. Caption + 5 hashtags together in one box.</div>
-            <textarea id="social" class="short">${escapeHtml(socialCopy)}</textarea>
-            <button onclick="copyText('social', this)">Copy Social Copy</button>
-          </div>
-        `;
-      } catch (err) {
-        app.innerHTML = `<div class="error">${escapeHtml(String(err))}</div>`;
-      }
-    }
-
-    load();
-  </script>
+load();
+</script>
 </body>
 </html>
