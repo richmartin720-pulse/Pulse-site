@@ -19,7 +19,6 @@ body {
   margin:auto;
 }
 
-/* HERO */
 .hero {
   background:#111b31;
   padding:12px;
@@ -31,6 +30,7 @@ body {
   font-size:17px;
   font-weight:700;
   margin-bottom:8px;
+  line-height:1.35;
 }
 
 .stats {
@@ -46,12 +46,12 @@ body {
   font-size:12px;
 }
 
-/* CARD */
 .card {
   background:#111b31;
   border:1px solid #24314f;
   border-radius:12px;
   margin-bottom:8px;
+  overflow:hidden;
 }
 
 .card.persona {
@@ -59,85 +59,112 @@ body {
   border-color:#1f2a44;
 }
 
-/* HEADER */
 .card-header {
-  padding:10px 14px;
-  display:flex;
-  justify-content:space-between;
+  width:100%;
+  background:transparent;
+  color:white;
+  border:none;
+  padding:10px;
+  display:grid;
+  grid-template-columns: 1fr auto;
+  gap:8px;
   align-items:center;
-  gap:10px;
-}
-
-.card-text {
-  flex:1;
+  cursor:pointer;
+  text-align:left;
 }
 
 .card-title {
   font-size:15px;
   font-weight:700;
+  line-height:1.25;
 }
 
 .card-meta {
   font-size:12px;
   color:#9fb0cf;
+  margin-top:2px;
 }
 
-/* ACTIONS */
-.actions {
+.header-actions {
   display:flex;
+  align-items:center;
   gap:6px;
-  padding-right:10px; /* 👈 pushes away from edge */
+  padding-right:4px;
 }
 
-button {
-  padding:6px 10px;
-  font-size:12px;
+.copy-btn {
+  padding:7px 9px;
+  background:#4f46e5;
   border:none;
   border-radius:8px;
+  color:white;
   cursor:pointer;
+  font-weight:700;
+  font-size:12px;
+  min-width:52px;
 }
 
-.copy {
-  background:#4f46e5;
-  color:white;
-}
-
-.view {
+.expand-btn {
+  padding:7px 9px;
   background:#1f2a44;
+  border:1px solid #33415f;
+  border-radius:8px;
   color:white;
+  cursor:pointer;
+  font-weight:700;
+  font-size:13px;
+  min-width:36px;
 }
 
-/* BODY */
 .card-body {
   display:none;
-  padding:10px 14px;
+  padding:0 10px 10px;
 }
 
 .card.open .card-body {
   display:block;
 }
 
+.card.open .expand-btn {
+  background:#33415f;
+}
+
 textarea {
   width:100%;
-  min-height:100px;
+  min-height:110px;
   background:#0a1222;
   color:white;
   border:1px solid #24314f;
   padding:10px;
   border-radius:8px;
   font-size:13px;
+  line-height:1.4;
+  box-sizing:border-box;
 }
 
-/* MOBILE FIX */
-@media (max-width: 480px) {
-  .card-header {
-    flex-direction:column;
-    align-items:flex-start;
+.error {
+  color:#ff9b9b;
+  font-weight:700;
+  white-space:pre-wrap;
+}
+
+@media (max-width: 420px) {
+  body {
+    padding:10px;
   }
 
-  .actions {
+  .card-header {
+    grid-template-columns: 1fr;
+  }
+
+  .header-actions {
+    justify-content:flex-start;
     padding-right:0;
-    margin-top:6px;
+  }
+
+  .copy-btn,
+  .expand-btn {
+    padding:8px 10px;
   }
 }
 </style>
@@ -149,74 +176,137 @@ textarea {
 </div>
 
 <script>
-
 const API_URL = "https://nnnmksktrzwuyyvouyxb.supabase.co/functions/v1/daily-prompt?key=pulse-8472-secure";
 
-const flags = ["🇺🇸","🇦🇺","🇮🇹","🇯🇵","🇨🇴","🇳🇴","🇬🇧","🇮🇳","🇧🇷","🇦🇪","🇩🇪","🇿🇦"];
-
-const countries = ["USA","Australia","Italy","Japan","Colombia","Norway","England","India","Brazil","UAE","Germany","South Africa"];
-
-const usernames = [
-"BuzzBeat","Farillo","FozzyW","Kahate","RichMartinColombia",
-"rich-martin","rich.martin.720","FagoVis686",
-"TIKOJOY533","VAXAB44473","JAYAFO7829","MIHOM89785"
+const flags = [
+"🇺🇸","🇦🇺","🇮🇹","🇯🇵","🇨🇴","🇳🇴","🇬🇧","🇮🇳","🇧🇷","🇦🇪","🇩🇪","🇿🇦"
 ];
 
-function copy(text, btn){
-navigator.clipboard.writeText(text);
-btn.innerText="Copied";
-setTimeout(()=>btn.innerText="Copy",1000);
+const countries = [
+"USA",
+"Australia",
+"Italy",
+"Japan",
+"Colombia",
+"Norway",
+"England",
+"India",
+"Brazil",
+"UAE",
+"Germany",
+"South Africa"
+];
+
+const usernames = [
+"BuzzBeat",
+"Farillo",
+"FozzyW",
+"Kahate",
+"RichMartinColombia",
+"rich-martin",
+"rich.martin.720",
+"FagoVis686",
+"TIKOJOY533",
+"VAXAB44473",
+"JAYAFO7829",
+"MIHOM89785"
+];
+
+function escapeHtml(str) {
+  return String(str ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 }
 
-function toggle(el){
-el.closest(".card").classList.toggle("open");
+async function copyRaw(text, btn){
+  await navigator.clipboard.writeText(text);
+  const old = btn.innerText;
+  btn.innerText = "Copied";
+  setTimeout(()=>btn.innerText = old, 1000);
 }
 
-function makeCard(title, meta, content, persona=false){
+function toggleCard(id){
+  document.getElementById(id).classList.toggle("open");
+}
 
-return `
-<div class="card ${persona ? "persona":""}">
-  <div class="card-header">
-    
-    <div class="card-text">
-      <div class="card-title">${title}</div>
-      <div class="card-meta">${meta || ""}</div>
+function makeCard(id, title, meta, content, extraClass = ""){
+  return `
+  <div class="card ${extraClass}" id="${id}">
+    <div class="card-header">
+      <div onclick="toggleCard('${id}')">
+        <div class="card-title">${escapeHtml(title)}</div>
+        ${meta ? `<div class="card-meta">${escapeHtml(meta)}</div>` : ""}
+      </div>
+
+      <div class="header-actions">
+        <button class="copy-btn" onclick="event.stopPropagation(); copyRaw(document.getElementById('${id}-text').value, this)">Copy</button>
+        <button class="expand-btn" onclick="event.stopPropagation(); toggleCard('${id}')">View</button>
+      </div>
     </div>
 
-    <div class="actions">
-      <button class="copy" onclick="copy(this.dataset.text,this)" data-text="${encodeURIComponent(content)}">Copy</button>
-      <button class="view" onclick="toggle(this)">View</button>
+    <div class="card-body">
+      <textarea id="${id}-text">${escapeHtml(content)}</textarea>
     </div>
-
-  </div>
-
-  <div class="card-body">
-    <textarea>${content}</textarea>
-  </div>
-</div>
-`;
+  </div>`;
 }
 
 function promoGeneral(){
-return `Create a 9:16 vertical TikTok advert for Pulse.
+return `Create a 9:16 vertical TikTok advert for a mobile app called Pulse.
 
-Core idea:
+Pulse is a weekly global opinion app.
+
+CORE MESSAGE:
 "1 question. 1 week. 1 world."
 
-Make it premium, modern, dark, minimal.
+The app lets people pick YES or NO and hear what the world thinks.
 
-Goal:
-Make people curious enough to search Pulse and download.
+GOAL:
+Make viewers curious enough to search for Pulse, visit the app, download it, sign up, and vote.
 
-Use:
-- app screenshots
-- YES / NO tension
-- short text only
+STYLE:
+- Premium
+- Modern
+- Dark
+- Minimal
+- Social-first
+- High contrast
+- Mobile app advert feel
+- Fast TikTok pacing
 
-End with:
-"Pulse — Hear the World"
+USE THE UPLOADED PULSE SCREENSHOTS AS VISUAL REFERENCE.
 
-6–8 seconds only.`;
+TEXT TO USE:
+"1 question"
+"1 week"
+"1 world"
+"YES or NO?"
+"Pick a side"
+"Pulse"
+"Hear the World"
+
+STRUCTURE:
+- Start with a clean Pulse app screenshot in the center
+- Add quick polished transitions
+- Show YES / NO energy around the app
+- Show the line "1 question. 1 week. 1 world."
+- End with Pulse branding
+
+RULES:
+- 9:16 vertical only
+- Keep all text centered
+- Keep wide safe margins
+- No long text
+- No clutter
+- No tiny unreadable text
+- No people speaking
+- No fake subtitles
+- Make it feel like a real app advert
+
+Length:
+6 to 8 seconds`;
 }
 
 function promoWeekly(){
@@ -227,52 +317,107 @@ The aim is to get people to go to the app and download it and sign up and vote.
 Use any knowledge that you have psychological balance and marketing skills to make the best TikTok video possible for this app using the screenshots as a references`;
 }
 
-function enhance(p){
-return `${p}
+function enhancePersonaPrompt(original){
+return `${original}
 
-Speak in English with a natural local accent.
-Keep it short, casual, and human.
-`;
+LANGUAGE:
+- Speak in clear English
+- Use a natural accent from their country or nationality
+- The accent should add variety but still be easy for a global audience to understand
+
+STYLE:
+- Natural speech
+- Casual TikTok style
+- Short sentences
+- Real human tone
+- Not robotic
+
+IMPORTANT:
+- Must sound like a real person talking to camera
+- Keep it believable and relatable`;
 }
 
-function social(q){
+function adImagePrompt(q){
+return `Create a 9:16 vertical poster-style image for a modern social media app called Pulse.
+
+Style:
+- Dark background
+- Minimal
+- Clean UI
+- High contrast
+- Modern mobile design
+- Premium tech feel
+- Very readable text
+- Built for a small phone screen
+- No clutter
+
+Main text:
+"${q}"
+
+Secondary text:
+"1 question. 1 week."
+"Hear the World"
+
+Design:
+- Keep the question centered and inside safe margins
+- Make the text bold and easy to read on a phone
+- Add subtle app-style framing or a clean card
+- Include understated Pulse branding
+- Make it feel like a premium ad poster for social media
+
+No extra elements.`;
+}
+
+function socialCopy(q){
 return `${q} 👇
 
 #Pulse #fyp #viral #debate #question`;
 }
 
 async function load(){
+  const app = document.getElementById("app");
 
-const res = await fetch(API_URL);
-const data = await res.json();
+  try {
+    const res = await fetch(API_URL, { cache:"no-store" });
+    const data = await res.json();
 
-let html = `
-<div class="hero">
-<div class="question">${data.question}</div>
-<div class="stats">
-<div class="stat">YES ${data.yesPercent}%</div>
-<div class="stat">NO ${data.noPercent}%</div>
-<div class="stat">${data.displayVotes}+ votes</div>
-</div>
-</div>
+    if (!res.ok || data.error) {
+      app.innerHTML = `<div class="error">${escapeHtml(data.error || "Unknown error")}</div>`;
+      return;
+    }
 
-${makeCard("Promo General","General app advert",promoGeneral())}
-${makeCard("Promo Weekly","Best performing Grok prompt",promoWeekly())}
-${makeCard("Ad Image","Poster prompt",data.imagePrompt1 || "")}
-${makeCard("Social Copy","Caption + hashtags",social(data.question))}
-`;
+    let html = `
+      <div class="hero">
+        <div class="question">${escapeHtml(data.question)}</div>
+        <div class="stats">
+          <div class="stat">YES ${data.yesPercent}%</div>
+          <div class="stat">NO ${data.noPercent}%</div>
+          <div class="stat">${data.displayVotes}+ votes</div>
+        </div>
+      </div>
 
-(data.personaPrompts || []).forEach((p,i)=>{
-html += makeCard(
-`Persona ${i+1} — ${usernames[i]}`,
-`${countries[i]} ${flags[i]}`,
-enhance(p.prompt),
-true
-);
-});
+      ${makeCard("promoGeneral", "Promo General", "General Pulse advert", promoGeneral())}
+      ${makeCard("promoWeekly", "Promo Weekly", "Best performing Grok advert prompt", promoWeekly())}
+      ${makeCard("adImage", "Ad Image Prompt", "Poster/image prompt", adImagePrompt(data.question || ""))}
+      ${makeCard("socialCopy", "Social Copy", "Caption + 5 hashtags", socialCopy(data.question || ""))}
+    `;
 
-document.getElementById("app").innerHTML = html;
+    (data.personaPrompts || []).forEach((p, i) => {
+      const title = `Persona ${i + 1} — ${usernames[i] || p.name || ""}`;
+      const meta = `${countries[i] || p.country || ""} ${flags[i] || ""}`;
+      html += makeCard(
+        `persona${i}`,
+        title,
+        meta,
+        enhancePersonaPrompt(p.prompt || ""),
+        "persona"
+      );
+    });
 
+    app.innerHTML = html;
+  } catch (err) {
+    app.innerHTML = `<div class="error">${escapeHtml(String(err))}</div>`;
+  }
 }
 
 load();
